@@ -31,22 +31,17 @@ def my_decrypt_aes_ctr(ciphertext, key, nonce):
 key = os.urandom(32)
 nonce = os.urandom(16) 
 
-# 1. Descobre a pasta exata onde este arquivo (aes_ctr.py) está salvo
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__)) #descobre a pasta exata onde este arquivo (aes_ctr.py) está salvo
+base_path = os.path.join(SCRIPT_DIR, "../03 - data/inputs by size") # constrói o caminho até a pasta de dados baseando-se no local do script
+sizes = ["8", "64", "512", "4096", "32768", "262144", "2097152"] #tamanhos sugeridos no assignment
 
-# 2. Constrói o caminho até a pasta de dados baseando-se no local do script
-base_path = os.path.join(SCRIPT_DIR, "../03 - data/inputs by size")
-sizes = ["8", "64", "512", "4096", "32768", "262144", "2097152"]
+repetitions = 30 #de acordo com central limit theory
 
-repetitions = 30
-
-results = {size: {} for size in sizes}
+results = {size: {} for size in sizes} #dict com resultados por tamanho
 
 for size in sizes:
-    folder_path = os.path.join(base_path, size)
-    #filtra apenas os arquivos .txt (file_1.txt até file_10.txt)
-    filenames = sorted([f for f in os.listdir(folder_path) if f.endswith('.txt')])
-    
+    folder_path = os.path.join(base_path, size) #filtra apenas os arquivos .txt (file_1.txt até file_10.txt)
+    filenames = sorted([f for f in os.listdir(folder_path) if f.endswith('.txt')], key=lambda x: int(x.split('_')[1].split('.')[0])) #nomeia os arquivos    
     for fname in filenames:
         file_path = os.path.join(folder_path, fname)
         
@@ -54,26 +49,26 @@ for size in sizes:
         with open(file_path, 'rb') as f:
             content = f.read()
         
-        # 1. Medir encriptação
+        #1. Medir encriptação
         t_enc = timeit.repeat(lambda: my_encrypt_aes_ctr(content, key, nonce), 
                               repeat=repetitions, number=1)
         
-        # Gerar o texto encriptado para testar a decriptação
+        #Gerar o texto encriptado para testar a decriptação
         ciphertext = my_encrypt_aes_ctr(content, key, nonce)
         
-        # 2. Medir decriptação
+        #2. Medir decriptação
         t_dec = timeit.repeat(lambda: my_decrypt_aes_ctr(ciphertext, key, nonce), 
                               repeat=repetitions, number=1)
         
-        # Salva a lista de tempos de ambas as operações
+        #salva a lista de tempos de ambas as operações
         results[size][fname] = {'Encryption': t_enc, 'Decryption': t_dec}
 
-data_pd = []
+data_pd = [] #cria o dataframe para pandas
 
-for size, files in results.items():
-    for fname, metrics in files.items():
-        for operation, times in metrics.items(): # Agora varre as duas operações
-            for t in times:
+for size, files in results.items(): #loop de tamanhos e arquivos
+    for fname, metrics in files.items(): #loop das metricas por aquivo
+        for operation, times in metrics.items(): # faz tanto para encriptar quando decriptar
+            for t in times: #coloca o tempo de execuçao de cada
                 data_pd.append({
                     "Size_Bytes": int(size),
                     "Filename": fname,
@@ -81,11 +76,10 @@ for size, files in results.items():
                     "Operation": operation # Coluna nova para separar no gráfico
                 })
 
-# DataFrame final para exportação
-df = pd.DataFrame(data_pd)
+df = pd.DataFrame(data_pd) #DataFrame final para exportação no pandas
 
 # =====================================================================
-# FUNÇÕES DE PLOTAGEM (são essas as funções chamadas no assigment1)
+# FUNÇÕES DE PLOTAGEM (são essas as funções chamadas no notebook - por padrão usam 32768Bytes e 'file_1.txt')
 # =====================================================================
 
 def plot_variation_same_file(df_data, size=32768, filename='file_1.txt'):
