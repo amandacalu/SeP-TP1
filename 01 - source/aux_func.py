@@ -37,11 +37,11 @@ def get_files(file):
         print(f"Path not found: {folder_path}")
         return None
     
-def save_in_results(ciphertext, folder_path, file_size):
-    output_dir = os.path.join(results_path(folder_path), file_size)
+def save_in_results(ciphertext, file, file_size, file_name):
+    script_dir = os.path.dirname(os.path.abspath(file))
+    output_dir = os.path.join(results_path(script_dir), file_size)
     os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, folder_path + ".enc")
+    output_path = os.path.join(output_dir, file_name + ".enc")
     with open(output_path, "wb") as f_enc:
         f_enc.write(ciphertext)
     return output_dir
-
