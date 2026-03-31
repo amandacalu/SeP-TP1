@@ -8,4 +8,4 @@ source: Contains the logic for the cryptographic primitives.
 scripts: Houses the automation tools.
 data: A local-only directory for storing the input files and the resulting raw data used for the report.
 notebooks: (Optional) Jupyter Notebooks for data analysis and plotting
-report: Final Documantation
+report: Final Documentation
