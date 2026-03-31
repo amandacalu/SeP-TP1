@@ -1,0 +1,47 @@
+import os 
+import time
+
+def measure_performance_time(func, args = None):
+    start_time = time.perf_counter()
+    result = func(args) if args else func()
+    end_time = time.perf_counter()
+    duration = end_time - start_time
+    return duration, result
+
+def xor_bytes(b1, b2):
+    return bytes(a ^ b for a, b in zip(b1, b2))
+
+def choose_size(base_path):
+    print(f"Searching in: {base_path}")
+    print("Available sizes: 8, 64, 512, 4096, 32768, 262144, 2097152")
+    size_choice = input("Write file size to encrypt the 10 files: ").strip()
+    return size_choice
+
+def results_path(dir):
+    return os.path.join(dir, "03 - data", "results")
+
+def files_path(dir):
+     return os.path.join(dir, "03 - data", "inputs by size")
+
+def get_files(file):
+    script_dir = os.path.dirname(os.path.abspath(file))
+    size_choice = choose_size(files_path(script_dir))
+    folder_path = os.path.join(files_path(script_dir), size_choice)
+
+    if os.path.exists(folder_path):
+        all_files = [file for file in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, file))]
+
+        if (all_files): return all_files, folder_path, size_choice
+        return None
+    else:
+        print(f"Path not found: {folder_path}")
+        return None
+    
+def save_in_results(ciphertext, folder_path, file_size):
+    output_dir = os.path.join(results_path(folder_path), file_size)
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, folder_path + ".enc")
+    with open(output_path, "wb") as f_enc:
+        f_enc.write(ciphertext)
+    return output_dir
+
