@@ -10,11 +10,11 @@ This project is Assignment #1 for the Security and Privacy. It provides Python i
 
 ## Features and Cryptographic Mechanisms
 This repository implements performance benchmarking for the following tasks:
-* **AES Cryptography:** Encrypts and decrypts files using AES in Counter (CTR) Mode with a 256-bit key. 
+* **AES Cryptography:** Encrypts and decrypts files using AES in Counter (CTR) Mode with a 256-bit key. (Symmetric Cryptography)
 * **RSA Cryptography:** Implements the RSA function and its inverse using a 2048-bit key. It uses a secure encryption scheme defined as:
     $Enc(m;r)=(RSA(r),H(0,r)\oplus m_{0},...,H(n,r)\oplus m_{n})$.
-    Here, $r$ is uniform, $H$ is a SHA-256 hash function producing outputs of size $l$, and $n$ is the number of blocks calculated as $\lceil|m|/l\rceil$.
-* **SHA-256 Hashing:** Measures the time for SHA-256 hash generation, and it's inverse, for the generated file sizes.
+    Here, $r$ is uniform, $H$ is a SHA-256 hash function producing outputs of size $l$, and $n$ is the number of blocks calculated as $\lceil|m|/l\rceil$. (PublicKey Cryptography)
+* **SHA-256 Hashing:** Measures the time for SHA-256 hash generation for the original files and also the time for when decripting the files created previously. (One-way function)
 
 ## Performance Measurement Methodology
 * **Scope:** The benchmarking exclusively measures the time of the cryptographic operations/algorithms; it excludes the time required for file generation.
