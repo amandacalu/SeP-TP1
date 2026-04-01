@@ -20,8 +20,8 @@ def create_dataframe_AES(data):
                     })
     return pd.DataFrame(data_pd)                                     # Dataframe with all of our time measurements.
 
+                                                                     # Shows encryption and decryption variability for a file over many executions
 def plot_variation_same_file(df_data, size=32768, filename='file_1.txt'):
-                                                                     # 
     file_test = df_data[(df_data['Size_Bytes'] == size) & (df_data['Filename'] == filename)]
     plt.figure(figsize=(8, 4))
     sns.histplot(data=file_test, x='Execution_Time', hue='Operation', kde=False, element="step")
@@ -31,44 +31,35 @@ def plot_variation_same_file(df_data, size=32768, filename='file_1.txt'):
     plt.ticklabel_format(style='plain', axis='x')
     plt.show()
 
+                                                                     # Shows encryption and decryption variability for all file sizes, with fixed file
 def plot_variation_fixed_file_categorical(df_data, filename='file_1.txt'):
-    # 1. Filtrar apenas o arquivo fixo e converter para microssegundos
+                                                                     # Filters one file for each size and converts to microsseconds
     df_plot = df_data[df_data['Filename'] == filename].copy()
     df_plot['Execution_Time_us'] = df_plot['Execution_Time'] * 1_000_000
-    
-    # 2. Garantir que o tamanho seja tratado como "texto" para o eixo X não virar uma régua
-    # E ordenar para que o gráfico siga do menor para o maior
     df_plot = df_plot.sort_values('Size_Bytes')
-    df_plot['Size_Label'] = df_plot['Size_Bytes'].astype(str)
-
+    df_plot['Size_Label'] = df_plot['Size_Bytes'].astype(str)        # Size treated as text to keep x axis categorical
     plt.figure(figsize=(12, 6))
-    
-    # 3. Usar o lineplot com os rótulos exatos
-    # 'marker="o"' coloca a bolinha em cada um dos 7 tamanhos
+
     sns.lineplot(
         data=df_plot, 
-        x='Size_Label', 
+        x='Size_Label',                                              
         y='Execution_Time_us', 
         hue='Operation', 
         marker='o',
         estimator='mean', 
         errorbar='sd'
     )
-    
-    # 4. Formatação Final
+                                                                    # Final formatting
     plt.title(f"Time Variability vs Specific File Sizes (Fixed File: {filename})", fontsize=14)
     plt.xlabel("File Size (Bytes)")
     plt.ylabel("Execution Time (µs)")
     plt.grid(True, axis='y', ls="--", alpha=0.3)
-    
-    # Isso garante que os números no Y fiquem limpos
     plt.ticklabel_format(style='plain', axis='y')
-    
     plt.show()
 
+                                                                     # Encryption and decryption performance for 10 files with same size
 def plot_comparison_fixed_size(df_data, size=32768):
     size_test = df_data[df_data['Size_Bytes'] == size]
-    
     plt.figure(figsize=(12, 5))
     sns.boxplot(data=size_test, x='Filename', y='Execution_Time', hue='Operation', palette='magma')
     plt.title(f"Consistency Check: 10 Different Files (Size: {size} bytes)")
@@ -76,19 +67,13 @@ def plot_comparison_fixed_size(df_data, size=32768):
     plt.xticks(rotation=45)
     plt.show()
 
+                                                                     # Shows execution time accross all files of all sizes
 def plot_consistency_all_sizes_us(df_data):
-    # 1. Preparação dos dados
     df_plot = df_data.copy()
     df_plot['Execution_Time_us'] = df_plot['Execution_Time'] * 1_000_000
-    
-    # Ordenar numericamente pelos tamanhos
     df_plot = df_plot.sort_values('Size_Bytes')
-    
     plt.figure(figsize=(14, 7))
     
-    # 2. Criar o Boxplot
-    # showfliers=False: Remove os pontos (outliers) que poluem o gráfico
-    # width=0.6: Dá mais respiro entre as barras de tamanhos diferentes
     sns.boxplot(
         data=df_plot, 
         x='Size_Bytes', 
@@ -96,36 +81,26 @@ def plot_consistency_all_sizes_us(df_data):
         hue='Operation',
         palette='magma',
         linewidth=1.2,
-        showfliers=False, 
+        showfliers=False,                                            # Removes outliers which might pollute the graph
         width=0.6
     )
     
-    # 3. Formatação do Gráfico
-    # Escala logarítmica é O SEGREDO para comparar 8B com 2MB no mesmo gráfico
-    plt.yscale('log')
-    
+    plt.yscale('log')                                                # Log scale allows comparing 8B with 2MB in the same graph
     plt.title("Performance Consistency: All Files across All Sizes (Outliers Hidden)", fontsize=14)
     plt.xlabel("File Size (Bytes)")
     plt.ylabel("Execution Time (µs) - Log Scale")
-    
-    # Grade em ambos os eixos para facilitar leitura na escala log
-    plt.grid(True, which="both", axis='y', ls="--", alpha=0.3)
-    
+    plt.grid(True, which="both", axis='y', ls="--", alpha=0.3)       # Grid on both axis for easier reading in log scale
     plt.tight_layout()
     plt.show()
 
+                                                                     # All performances times by file size side by side in a log scale graphic
 def plot_final_scalability(df_data):
-    # 1. Preparação: Cópia dos dados e conversão para microssegundos (us)
     df_plot = df_data.copy()
+                                                                     # Conversion to microsseconds (us)
     df_plot["Execution_Time_us"] = df_plot["Execution_Time"] * 1_000_000
-    
-    # 2. Definir os tamanhos exatos para os rótulos do eixo X
-    unique_sizes = sorted(df_plot['Size_Bytes'].unique())
-    
+    unique_sizes = sorted(df_plot['Size_Bytes'].unique())            # Defines exact sizes for x axis labels
     plt.figure(figsize=(12, 6))
-    
-    # 3. Criar o gráfico de linha
-    # O lineplot com errorbar="sd" calcula a média dos 10 arquivos e mostra a variação
+
     sns.lineplot(
         data=df_plot, 
         x="Size_Bytes", 
@@ -135,21 +110,13 @@ def plot_final_scalability(df_data):
         errorbar="sd"
     )
     
-    # 4. Ajuste dos Eixos
-    # Usamos escala logarítmica para que o 8 não fique "esmagado" perto do zero,
-    # mas forçamos os labels a serem EXATAMENTE os seus 7 tamanhos.
-    plt.xscale('log')
+    plt.xscale('log')                                                # Logarithmic scale for better visualization
     plt.xticks(unique_sizes, labels=[str(s) for s in unique_sizes])
-    
-    # 5. Títulos e Legendas
     plt.title("Symmetry & Scalability: Encryption vs Decryption Performance", fontsize=14)
     plt.xlabel("File Size (Bytes)")
     plt.ylabel("Execution Time (µs)")
-    
-    # Grade e formatação numérica limpa no Y
     plt.grid(True, which="both", ls="-", alpha=0.2)
     plt.ticklabel_format(style='plain', axis='y')
-    
     plt.show()
 
 # ============================================================== #
