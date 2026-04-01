@@ -1,12 +1,12 @@
 # Security and Privacy: Performance Benchmarking of Cryptographic Mechanisms
 
 ## Overview
-This project is Assignment #1 for the Security and Privacy. It provides Python implementations to measure and benchmark the execution times of cryptographic mechanisms based on AES, RSA, and SHA256 when processing files of different sizes.
+This project is Assignment #1 for the Security and Privacy lectures. It provides Python implementations to measure and benchmark the execution times of cryptographic mechanisms based on AES, RSA, and SHA256 when processing files of different sizes.
 
 ## Group Members
 1. Aly Mohamed Saad Filho - 202401045
 2. Amanda Lucas - 202400455
-3. Silvia Baciu Pinto - 202405988
+3. Sílvia Baciu Pinto - 202405988
 
 ## Features and Cryptographic Mechanisms
 This repository implements performance benchmarking for the following tasks:
@@ -41,16 +41,8 @@ This repository implements performance benchmarking for the following tasks:
 ```bash
 pip install -r requirements.txt
 ```
-*Then run the following program to generate the files.*
+*Then run the following program to generate the files with different sizes.*
 ```bash
 python gen_files.py
 ```
-*with the files properly generated, just choose which method of encryption and decryption you want to use:*
-```bash
-python AES_ctr.py
-```
-*or*
-```bash
-python rsa_custom.py
-```
-*for better visualization of the results, run the assigment1.py with your code editor.*
+*Finally, run the Jupyter Notebook assignment1.ipynb to visualize the full analysis of the results.*
