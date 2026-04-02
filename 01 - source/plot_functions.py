@@ -38,7 +38,7 @@ def plot_variation_fixed_file_categorical(df_data, filename='file_1.txt'):
     df_plot['Execution_Time_us'] = df_plot['Execution_Time'] * 1_000_000
     df_plot = df_plot.sort_values('Size_Bytes')
     df_plot['Size_Label'] = df_plot['Size_Bytes'].astype(str)        # Size treated as text to keep x axis categorical
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(10, 5))
 
     sns.lineplot(
         data=df_plot, 
@@ -99,7 +99,7 @@ def plot_final_scalability(df_data):
                                                                      # Conversion to microsseconds (us)
     df_plot["Execution_Time_us"] = df_plot["Execution_Time"] * 1_000_000
     unique_sizes = sorted(df_plot['Size_Bytes'].unique())            # Defines exact sizes for x axis labels
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(10, 5))
 
     sns.lineplot(
         data=df_plot, 
@@ -140,8 +140,9 @@ def create_dataframe_RSA(data):
     return df_data
 
 def show_plot(dataframe, title):                                     # Standard plot to compare execution times by file size in a dataframe
-    plt.figure(figsize=(10, 6))                                      # Plot design configurations for cleaner display.
     sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(8, 5))                                      # Plot design configurations for cleaner display.
+
 
     ax = sns.lineplot(
         data=dataframe,

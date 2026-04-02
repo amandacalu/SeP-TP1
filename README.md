@@ -20,6 +20,7 @@ This repository implements performance benchmarking for the following tasks:
 * **Scope:** The benchmarking exclusively measures the time of the cryptographic operations/algorithms; it excludes the time required for file generation.
 * **Padding:** If padding is used, note that it may affect the results, especially for smaller file sizes like the one with 8 bits.
 * **Statistical Significance:** The code relies on multiple runs to produce statistically significant results (e.g., standard deviation or confidence intervals). It accounts for running a fixed algorithm over the same file multiple times, as well as over multiple randomly generated files of fixed sizes.
+* **Logarithmic Scaling:** Analysis utilizes logarithmic Y-axes to visualize performance across the full range of test data (8 B to 2 MB).
 
 ## Experimental Setup
 
@@ -36,6 +37,12 @@ This repository implements performance benchmarking for the following tasks:
 * **pandas** == 3.0.2
 * **seaborn** == 0.13.2
 
+## A.I. Used
+* **Data Visualization:** Designing and refining Seaborn and Matplotlib configurations for statistical plotting (e.g., handling boxplot fliers and log scales).
+* **Data Manipulation:** Optimizing Pandas workflows for aggregating benchmark results and calculating statistical metrics.
+* **Navigating the cryptography library in Python:** Including identifying the appropriate primitives for AES-CTR and SHA-256 and understanding the syntax for key/nonce management
+
+
 ## How to Run
 *First, install the libraries needed.*
 ```bash
@@ -45,4 +52,4 @@ pip install -r requirements.txt
 ```bash
 python gen_files.py
 ```
-*Finally, run the Jupyter Notebook assignment1.ipynb to visualize the full analysis of the results.*
+*Finally, open and run the Jupyter Notebook assignment1.ipynb to visualize the full performance analysis.*
